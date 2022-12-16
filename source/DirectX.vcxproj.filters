@@ -42,6 +42,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

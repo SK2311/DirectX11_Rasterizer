@@ -1,4 +1,5 @@
 #pragma once
+#include "Camera.h"
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -41,6 +42,8 @@ namespace dae
 		ID3D11RenderTargetView* m_pRenderTargetView{};
 
 		Mesh* m_pMesh{};
+
+		Camera m_Camera{};
 
 		//DIRECTX
 		HRESULT InitializeDirectX();

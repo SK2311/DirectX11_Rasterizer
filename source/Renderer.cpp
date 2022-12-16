@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "Mesh.h"
+#include "Camera.h"
 
 namespace dae {
 
@@ -23,14 +24,16 @@ namespace dae {
 		}
 
 		std::vector<Vertex_PosCol> vertices{
-			{{0.0f, 0.5f, 0.5f},	{1.0f, 0.0f, 0.0f}},
-			{{0.5f, -0.5f, 0.5f},	{0.0f, 0.0f, 1.0f}},
-			{{-0.5f, -0.5f, 0.5f},	{0.0f, 1.0f, 0.0f}}
+			{{0.0f, 3.0f, 2.0f},	{1.0f, 0.0f, 0.0f}},
+			{{3.0f, -3.0f, 2.0f},	{0.0f, 0.0f, 1.0f}},
+			{{-3.0f, -3.0f, 2.0f},	{0.0f, 1.0f, 0.0f}}
 		};
 
 		std::vector<uint32_t> indices{ 0,1,2 };
 
 		m_pMesh = new Mesh(m_pDevice, vertices, indices);
+
+		m_Camera.Initialize(45.f, { 0.0f,0.0f,-10.f }, (float)m_Width / (float)m_Height);
 	}
 
 	Renderer::~Renderer()
@@ -57,7 +60,7 @@ namespace dae {
 
 	void Renderer::Update(const Timer* pTimer)
 	{
-
+		
 	}
 
 

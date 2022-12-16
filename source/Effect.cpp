@@ -10,6 +10,12 @@
 			std::wcout << L"Technique not valid\n";
 		}
 
+		m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
+		if (!m_pMatWorldViewProjVariable->IsValid())
+		{
+			std::wcout << L"m_pMatWorldViewProjVariable not valid\n";
+		}
+
 		//Vertex layout
 		static constexpr uint32_t numElements{ 2 };
 		D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
@@ -111,4 +117,9 @@
 	ID3D11InputLayout* Effect::GetInputLayout() const
 	{
 		return m_pInputLayout;
+	}
+
+	ID3DX11EffectMatrixVariable* Effect::GetWorldViewProjectionMatrix() const
+	{
+		return m_pMatWorldViewProjVariable;
 	}
