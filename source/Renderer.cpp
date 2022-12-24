@@ -33,34 +33,39 @@ namespace dae {
 
 		m_pMesh = new Mesh(m_pDevice, vertices, indices);
 
-		m_Camera.Initialize(45.f, { 0.0f,0.0f,-10.f }, (float)m_Width / (float)m_Height);
+		m_pCamera = new Camera();
+		m_pCamera->Initialize(45.f, { 0.0f,0.0f,-10.0f }, (float)m_Width / (float)m_Height);
 	}
 
 	Renderer::~Renderer()
 	{
-		m_pRenderTargetView->Release();
-		m_pRenderTargetBuffer->Release();
-
-		m_pDepthStencilView->Release();
-		m_pDepthStencilBuffer->Release();
-
-		m_pSwapChain->Release();
-
 		if (m_pDeviceContext)
 		{
+			m_pRenderTargetView->Release();
+			m_pRenderTargetBuffer->Release();
+
+			m_pDepthStencilView->Release();
+			m_pDepthStencilBuffer->Release();
+
+			m_pSwapChain->Release();
+
+		
 			m_pDeviceContext->ClearState();
 			m_pDeviceContext->Flush();
 			m_pDeviceContext->Release();
+
+			m_pDevice->Release();
+
+			delete m_pMesh;
 		}
 
-		m_pDevice->Release();
-
-		delete m_pMesh;
+		
+		delete m_pCamera;
 	}
 
 	void Renderer::Update(const Timer* pTimer)
 	{
-		
+		m_pCamera->Update(pTimer);
 	}
 
 
@@ -74,8 +79,10 @@ namespace dae {
 		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, &clearColour.r);
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+		Matrix worldViewProjection = m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix();
+
 		//2 Set pipeline + draw calls
-		m_pMesh->Render(m_pDeviceContext);
+		m_pMesh->Render(m_pDeviceContext, worldViewProjection);
 
 		//3 Present backbuffer (swap)
 		m_pSwapChain->Present(0, 0);

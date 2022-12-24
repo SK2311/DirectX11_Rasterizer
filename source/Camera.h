@@ -18,7 +18,6 @@ namespace dae
 		{
 		}
 
-
 		Vector3 origin{};
 		float fovAngle{90.f};
 		float fov{ tanf((fovAngle * TO_RADIANS) / 2.f) };
@@ -57,9 +56,9 @@ namespace dae
 			//ONB => invViewMatrix
 			
 			Matrix rotation = Matrix::CreateRotationX(totalPitch * TO_RADIANS) * Matrix::CreateRotationY(totalYaw * TO_RADIANS);
-			forward = rotation.GetAxisZ();
-			right = rotation.GetAxisX();
-			up = rotation.GetAxisY();
+			forward = rotation.TransformVector(Vector3::UnitZ).Normalized();
+			right = Vector3::Cross(Vector3::UnitY, forward).Normalized();
+			up = Vector3::Cross(forward, right).Normalized();
 
 			invViewMatrix = { right, up, forward, origin };
 
@@ -133,7 +132,7 @@ namespace dae
 
 			//Update Matrices
 			CalculateViewMatrix();
-			//CalculateProjectionMatrix(); //Try to optimize this - should only be called once or when fov/aspectRatio changes
+			CalculateProjectionMatrix(); //Try to optimize this - should only be called once or when fov/aspectRatio changes
 		}
 
 		dae::Matrix GetViewMatrix()

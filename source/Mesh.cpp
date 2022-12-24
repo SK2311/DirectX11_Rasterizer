@@ -46,17 +46,14 @@
 
 	Mesh::~Mesh()
 	{
-		m_pIndexBuffer->Release();
 		m_pVertexBuffer->Release();
-		m_pTechnique->Release();
+		m_pIndexBuffer->Release();
 
 		delete m_pEffect;
 	}
 
-	void Mesh::Render(ID3D11DeviceContext* pDeviceContext)
+	void Mesh::Render(ID3D11DeviceContext* pDeviceContext, dae::Matrix& worldViewProjection)
 	{
-
-
 		//1 Set primitive topology
 		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -67,12 +64,10 @@
 		constexpr UINT stride = sizeof(Vertex_PosCol);
 		constexpr UINT offset = 0;
 		pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+		m_pEffect->GetWorldViewProjectionMatrix()->SetMatrix((float*)(&worldViewProjection));
 
 		//4 Set indexbuffer
 		pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		
-		const float* matrixFloat = reinterpret_cast<const float*>(m_pEffect->GetWorldViewProjectionMatrix());
-		m_pEffect->GetWorldViewProjectionMatrix()->SetMatrix(matrixFloat);
 
 		//5 Draw
 		D3DX11_TECHNIQUE_DESC techDesc{};

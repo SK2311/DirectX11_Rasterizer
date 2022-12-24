@@ -42,8 +42,7 @@ namespace dae
 		ID3D11RenderTargetView* m_pRenderTargetView{};
 
 		Mesh* m_pMesh{};
-
-		Camera m_Camera{};
+		Camera* m_pCamera{};
 
 		//DIRECTX
 		HRESULT InitializeDirectX();
