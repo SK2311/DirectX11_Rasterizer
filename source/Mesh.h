@@ -1,22 +1,23 @@
 #pragma once
 class Effect;
-	struct Vertex_PosCol
+	struct Vertex
 	{
-		dae::Vector3 Position;
-		dae::ColorRGB Color;
+		dae::Vector3 position{};
+		dae::Vector3 colour{ 1,1,1 };
+		dae::Vector2 uv{};
 	};
 
 	class Mesh
 	{
 	public:
-		Mesh(ID3D11Device* pDevice, std::vector<Vertex_PosCol> vertices, std::vector<uint32_t> indices);
+		Mesh(ID3D11Device* pDevice, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 		~Mesh();
 
-		void Render(ID3D11DeviceContext* pDeviceContext, dae::Matrix& worldViewProjection);
+		void Render(ID3D11DeviceContext* pDeviceContext, dae::Matrix& worldViewProjection) const;
+		void SetTexture(ID3D11Texture2D* pTexture, ID3D11ShaderResourceView* pShaderResourceView);
 
 	private:
 		Effect* m_pEffect{};
-		ID3DX11EffectTechnique* m_pTechnique{};
 
 		ID3D11Buffer* m_pVertexBuffer{};
 		ID3D11Buffer* m_pIndexBuffer{};

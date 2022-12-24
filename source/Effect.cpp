@@ -2,7 +2,7 @@
 #include "Effect.h"
 	Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFilePath)
 	{
-		m_pEffect = LoadEffect(pDevice, assetFilePath);
+		m_pEffect = Effect::LoadEffect(pDevice, assetFilePath);
 
 		m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
 		if (!m_pTechnique->IsValid())
@@ -16,19 +16,30 @@
 			std::wcout << L"m_pMatWorldViewProjVariable not valid\n";
 		}
 
+		m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
+		if (!m_pDiffuseMapVariable->IsValid())
+		{
+			std::wcout << L"m_pDiffuseMapVariable not valid\n";
+		}
+
 		//Vertex layout
-		static constexpr uint32_t numElements{ 2 };
+		static constexpr uint32_t numElements{ 3 };
 		D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
 
 		vertexDesc[0].SemanticName = "POSITION";
 		vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		vertexDesc[0].AlignedByteOffset = 0;
+		vertexDesc[0].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 		vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 		vertexDesc[1].SemanticName = "COLOR";
 		vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		vertexDesc[1].AlignedByteOffset = 12;
+		vertexDesc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 		vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+		vertexDesc[2].SemanticName = "TEXCOORD";
+		vertexDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+		vertexDesc[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		vertexDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 		//Input layout
 		D3DX11_PASS_DESC passDesc{};
@@ -122,4 +133,12 @@
 	ID3DX11EffectMatrixVariable* Effect::GetWorldViewProjectionMatrix() const
 	{
 		return m_pMatWorldViewProjVariable;
+	}
+
+	void Effect::SetDiffuseMap(ID3D11Texture2D* pTexture, ID3D11ShaderResourceView* pShaderResourceView)
+	{
+		if (m_pDiffuseMapVariable)
+		{
+			m_pDiffuseMapVariable->SetResource(pShaderResourceView);
+		}
 	}
