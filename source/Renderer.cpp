@@ -48,13 +48,11 @@ namespace dae {
 		std::vector<uint32_t> indices{};
 		dae::Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices, false);
 
-		Texture* pTexture = new Texture();
-		m_pDiffuseTexture = pTexture->LoadFromFile(m_pDevice, "Resources/vehicle_diffuse.png");
+		Texture pTexture{};
+		m_pDiffuseTexture = pTexture.LoadFromFile(m_pDevice, "Resources/vehicle_diffuse.png");
 
 		m_pMesh = new Mesh(m_pDevice, vertices, indices);
-		m_pMesh->SetTexture(m_pDiffuseTexture, pTexture->GetShaderResourcceView());
-
-		delete pTexture;
+		m_pMesh->SetTexture(m_pDiffuseTexture, pTexture.GetShaderResourcceView());
 
 		m_pCamera = new Camera();
 		m_pCamera->Initialize(45.f, { 0.0f,0.0f,-10.0f }, (float)m_Width / (float)m_Height);
